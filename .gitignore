@@ -1,0 +1,7 @@
+# Private: accounts, password hashes and the original uploads stay on this computer.
+# The finished card (photos included) is exported to site/, which is what gets deployed.
+/data/
+/uploads/
+node_modules/
+.vercel/
+.DS_Store

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My cards — Keepsake</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600;1,9..144,700&family=Caveat:wght@600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/base.css">
+  <style>
+    main { max-width: 1000px; margin: 0 auto; padding: 120px clamp(16px, 5vw, 48px) 80px; }
+    .head { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; margin-bottom: 40px; }
+    .head h1 { font-size: clamp(40px, 6vw, 60px); }
+    .head p { margin: 6px 0 0; color: var(--ink-soft); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 22px; }
+    .tile { background: var(--paper); border-radius: 24px; padding: 26px; box-shadow: var(--shadow); display: grid; gap: 14px;
+      animation: in 1s var(--ease) both; }
+    @keyframes in { from { opacity: 0; transform: translateY(24px); } }
+    .swatch { height: 120px; border-radius: 16px; display: grid; place-items: center; font-family: var(--script); font-size: 34px; color: #fff; }
+    .tile h3 { font-size: 28px; }
+    .meta { font-size: 13px; color: var(--ink-soft); }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .empty { text-align: center; padding: 70px 20px; background: var(--paper); border-radius: 28px; box-shadow: var(--shadow); }
+    .empty .script { font-size: 48px; color: var(--accent); display: block; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="/">Keepsake</a>
+    <div class="links"><button class="btn ghost small" id="logout">Log out</button></div>
+  </nav>
+  <main>
+    <div class="head">
+      <div><h1 id="hello">Your cards</h1><p>Every card you've made, all in one place.</p></div>
+      <button class="btn" id="new">+ New card</button>
+    </div>
+    <div id="list"></div>
+  </main>
+  <script src="/app.js"></script>
+  <script>
+    const GRADIENTS = {
+      rose: 'linear-gradient(135deg,#f2a7b8,#d9577a)', lavender: 'linear-gradient(135deg,#c9b8f5,#8b6fd6)',
+      midnight: 'linear-gradient(135deg,#1d2147,#e8b86a)', peach: 'linear-gradient(135deg,#f9bf9f,#ec7f5a)', burgundy: 'linear-gradient(135deg,#6e0f26,#f2b6a8)',
+    };
+    (async () => {
+      const { user } = await api('/api/me');
+      if (!user) return location.replace('/login');
+      document.getElementById('hello').replaceChildren(`Hi, ${user.name.split(' ')[0]} `, el('span', { style: 'color:var(--accent)' }, '♥'));
+      render();
+    })();
+
+    async function render() {
+      const { cards } = await api('/api/cards');
+      const list = document.getElementById('list');
+      if (!cards.length) {
+        list.replaceChildren(el('div', { class: 'empty' },
+          el('span', { class: 'script' }, 'Let\'s make your first card'),
+          el('p', { style: 'color:var(--ink-soft)' }, 'Birthday, anniversary, or just because.'),
+          el('button', { class: 'btn', onclick: create }, 'Create a card ♥')));
+        return;
+      }
+      list.replaceChildren(el('div', { class: 'grid' }, cards.map((c, i) => el('div', { class: 'tile', style: `animation-delay:${i * 80}ms` },
+        el('div', { class: 'swatch', style: `background:${GRADIENTS[c.theme] || GRADIENTS.rose}` }, c.recipient ? `for ${c.recipient}` : '♥'),
+        el('h3', {}, c.recipient ? `${c.recipient}'s card` : 'Untitled card'),
+        el('div', { class: 'meta' }, `${c.messageCount} guest message${c.messageCount === 1 ? '' : 's'} · edited ${new Date(c.updatedAt).toLocaleDateString()}`),
+        el('div', { class: 'actions' },
+          el('a', { class: 'btn small', href: `/edit/${c.slug}` }, 'Edit'),
+          el('a', { class: 'btn ghost small', href: `/c/${c.slug}`, target: '_blank' }, 'Open'),
+          el('button', { class: 'btn danger small', onclick: () => remove(c) }, 'Delete'))))));
+    }
+
+    async function create() {
+      const { card } = await api('/api/cards', { method: 'POST' });
+      location.href = `/edit/${card.slug}`;
+    }
+    async function remove(c) {
+      if (!confirm(`Delete ${c.recipient || 'this'} card? This can't be undone.`)) return;
+      await api(`/api/cards/${c.slug}`, { method: 'DELETE' });
+      toast('Card deleted'); render();
+    }
+    document.getElementById('new').addEventListener('click', create);
+    document.getElementById('logout').addEventListener('click', async () => { await api('/api/logout', { method: 'POST' }); location.href = '/'; });
+  </script>
+</body>
+</html>

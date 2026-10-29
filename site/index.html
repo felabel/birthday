@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A card for you ♥</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600;1,9..144,700&family=Caveat:wght@600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/base.css">
+  <link rel="stylesheet" href="/card.css">
+</head>
+<body class="locked">
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <canvas id="fx" aria-hidden="true"></canvas>
+  <div class="progress" aria-hidden="true"><span></span></div>
+
+  <!-- ============ INTRO: the envelope & card ============ -->
+  <section id="intro">
+    <div class="stage">
+      <div class="envelope" id="envelope">
+        <div class="env-back"></div>
+        <div class="env-letter">
+          <div class="cover-art">
+            <span class="cover-heart">♥</span>
+            <span class="script js-cover-line"></span>
+          </div>
+        </div>
+        <div class="env-pocket"></div>
+        <div class="env-flap"></div>
+        <button class="seal" id="seal" aria-label="Open your card"><span>♥</span></button>
+      </div>
+
+      <div class="book" id="book" aria-live="polite">
+        <div class="book-inner">
+          <div class="page-right">
+            <p class="eyebrow">Happy birthday</p>
+            <h2 class="script js-recipient"></h2>
+            <p class="page-line js-headline"></p>
+            <button class="btn begin" id="begin">Begin ↓</button>
+          </div>
+          <div class="book-cover">
+            <div class="cover-front">
+              <div class="cover-frame">
+                <span class="cover-heart big">♥</span>
+                <span class="script js-cover-line"></span>
+              </div>
+            </div>
+            <div class="cover-back">
+              <div class="doodle">
+                <svg viewBox="0 0 120 110" aria-hidden="true"><path d="M60 102 C20 72 6 52 6 32 A26 26 0 0 1 60 22 A26 26 0 0 1 114 32 C114 52 100 72 60 102Z" /></svg>
+              </div>
+              <p class="script from">with love,<br><span class="js-sender"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="intro-to">For <span class="js-recipient"></span></p>
+    <p class="intro-hint">tap the seal to open</p>
+  </section>
+
+  <!-- ============ STORY ============ -->
+  <main id="story" aria-hidden="true">
+    <section class="hero" id="hero">
+      <p class="eyebrow js-date"></p>
+      <h1 class="hero-title js-headline-split"></h1>
+      <p class="hero-name script js-recipient"></p>
+      <div class="hero-buddy" aria-hidden="true"><span class="bubble">it's ur birthday!!</span></div>
+      <div class="scroll-cue"><span>scroll slowly</span><i></i></div>
+    </section>
+
+    <section class="letter-sec" id="letter">
+      <div class="paper">
+        <p class="eyebrow">A little letter</p>
+        <div class="letter-body"></div>
+        <p class="sign script">— <span class="js-sender"></span></p>
+      </div>
+    </section>
+
+    <section class="memories" id="memories">
+      <div class="mem-head">
+        <p class="eyebrow">Our memories</p>
+        <h2>Every little moment<br><em>with you</em></h2>
+      </div>
+      <div class="mem-track"></div>
+    </section>
+
+    <section class="reasons" id="reasons">
+      <p class="eyebrow">Tap each one</p>
+      <h2>Things I love <em>about you</em></h2>
+      <div class="notes-grid"></div>
+    </section>
+
+    <section class="guestbook" id="guestbook">
+      <p class="eyebrow">From the people who love you</p>
+      <h2>Love <em>from everyone</em></h2>
+      <div class="gb-grid"></div>
+      <form class="gb-form" id="gb-form" hidden>
+        <h3>Leave a birthday message</h3>
+        <div class="field"><label for="gb-name">Your name</label><input class="input" id="gb-name" maxlength="60" required></div>
+        <div class="field"><label for="gb-text">Your message</label><textarea class="input" id="gb-text" maxlength="800" required placeholder="Write something sweet…"></textarea></div>
+        <button class="btn" type="submit">Send with love ♥</button>
+      </form>
+    </section>
+
+    <section class="finale" id="finale">
+      <p class="eyebrow">One last thing</p>
+      <h2 class="finale-title">Make a wish</h2>
+      <p class="finale-hint">…then tap the candles to blow them out</p>
+      <button class="cake" id="cake" aria-label="Blow out the candles">
+        <span class="candles">
+          <span class="candle"><i class="flame"></i></span>
+          <span class="candle"><i class="flame"></i></span>
+          <span class="candle"><i class="flame"></i></span>
+        </span>
+        <span class="tier top"><span class="cake-doodle"></span></span>
+        <span class="tier bottom"><span class="cake-text js-cake-text"></span></span>
+        <span class="plate"></span>
+      </button>
+      <div class="finale-after">
+        <p class="script finale-big">Happy Birthday</p>
+        <p class="finale-text js-finale"></p>
+        <button class="btn ghost" id="replay">Read it all again ↑</button>
+      </div>
+    </section>
+
+    <footer class="card-foot">Made with <a href="/">Keepsake</a> — make one for someone you love</footer>
+  </main>
+
+  <div class="player" id="player" hidden>
+    <span class="disc" aria-hidden="true"><i></i></span>
+    <span class="player-meta"><span class="np">our song</span><span class="song-title js-song"></span></span>
+    <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    <button class="play-btn" id="play-btn" aria-label="Pause music">
+      <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.5"/><rect x="14" y="5" width="4" height="14" rx="1.5"/></svg>
+      <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+    </button>
+  </div>
+  <audio id="song" loop preload="auto"></audio>
+
+  <a class="pill owner-pill" id="owner-pill" hidden>✎ Edit this card</a>
+  <button class="pill invite-pill" id="invite-pill" hidden>✍︎ Add your message</button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="/app.js"></script>
+  <script src="/doodles.js"></script>
+  <script>window.CARD_DATA = {"slug":"ofbLMamK","recipient":"Bishop","sender":"Felicity","birthday":"2026-10-30","theme":"burgundy","cover":"Undress me","headline":"Happy Birthday","letter":"Hey love - love youuuuuuuuu","memories":[{"id":"kdT0bVIDVQev","image":"/uploads/C4p8DSaCdcv8z-pt.jpg","caption":"First white wedding together I think","date":""},{"id":"zpDVcbgyCpv-","image":"/uploads/Z-0uUN-zNh6EeSqA.jpg","caption":"First beach together","date":""},{"id":"ezeMVP47Tj5x","image":"/uploads/NWNkr_Q5GAmujJFj.jpg","caption":"My haaaaandsoooome","date":""},{"id":"3-Q4_FxQ4L3R","image":"/uploads/9q29f4aLm83TwdqF.jpg","caption":"Just being a fynnnnnn thannnng","date":""}],"notes":["the way you make me laugh"],"finale":"Make a wish!","music":null,"guestbook":false,"messages":[{"name":"Precious","text":"Love you so much, have a blast","createdAt":"2026-10-29T17:13:18.534Z"},{"name":"Hopeyy","text":"Happy birthday bishboyyyyyyy have a blast","createdAt":"2026-10-29T17:22:54.112Z"}]};</script>
+  <script src="/card.js"></script>
+</body>
+</html>

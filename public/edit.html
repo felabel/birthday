@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Edit card — Keepsake</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,600;1,9..144,700&family=Caveat:wght@600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/base.css">
+  <style>
+    main { max-width: 760px; margin: 0 auto; padding: 110px clamp(16px, 5vw, 40px) 120px; }
+    h1 { font-size: clamp(38px, 6vw, 56px); margin-bottom: 8px; }
+    .sub { color: var(--ink-soft); margin: 0 0 36px; }
+    .panel { background: var(--paper); border-radius: 24px; padding: clamp(22px, 4vw, 34px); box-shadow: 0 20px 50px -30px rgba(120, 40, 70, .35); margin-bottom: 22px; }
+    .panel h2 { font-size: 30px; margin-bottom: 4px; }
+    .panel .hint { color: var(--ink-soft); font-size: 14px; margin: 0 0 20px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .themes { display: flex; gap: 12px; flex-wrap: wrap; }
+    .theme { display: grid; justify-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
+    .theme input { position: absolute; opacity: 0; }
+    .theme span { width: 54px; height: 54px; border-radius: 50%; border: 3px solid transparent; transition: transform .3s var(--ease), border-color .3s; }
+    .theme input:checked + span { border-color: var(--ink); transform: scale(1.08); }
+    .theme input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .mem { display: grid; grid-template-columns: 92px 1fr auto; gap: 14px; align-items: center; padding: 14px 0; border-top: 1px solid var(--line); }
+    .thumb { width: 92px; height: 108px; border-radius: 12px; border: 1.5px dashed var(--line); background: var(--bg) center/cover; cursor: pointer;
+      display: grid; place-items: center; color: var(--ink-soft); font-size: 12px; text-align: center; padding: 6px; }
+    .thumb.has { border-style: solid; color: transparent; }
+    .mem .fields { display: grid; gap: 8px; }
+    .mem .tools, .reason .tools { display: flex; flex-direction: column; gap: 4px; }
+    .icon { width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line); background: transparent; cursor: pointer; color: var(--ink-soft); font-size: 14px; }
+    .icon:hover { background: var(--bg); color: var(--ink); }
+    .reason { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-bottom: 10px; align-items: center; }
+    .reason .tools { flex-direction: row; }
+    .linkbox { display: flex; gap: 8px; }
+    .linkbox .input { font-size: 13px; }
+    .switch { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; cursor: pointer; }
+    .msg { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 14px 0; border-top: 1px solid var(--line); }
+    .msg p { margin: 0; font-family: var(--serif); font-size: 18px; }
+    .msg small { color: var(--ink-soft); }
+    .savebar { position: fixed; left: 50%; bottom: 20px; translate: -50% 0; z-index: 40; display: flex; gap: 10px; align-items: center;
+      background: color-mix(in srgb, var(--paper) 85%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      padding: 10px 10px 10px 20px; border-radius: 999px; box-shadow: var(--shadow); border: 1px solid var(--line); font-size: 14px; white-space: nowrap; }
+    .savebar .status { color: var(--ink-soft); }
+    @media (max-width: 600px) { .row { grid-template-columns: 1fr; } .mem { grid-template-columns: 76px 1fr; } .mem .tools { grid-column: 1 / -1; flex-direction: row; } .thumb { width: 76px; height: 92px; } .savebar .status { display: none; } }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="/dashboard">Keepsake</a>
+    <div class="links"><a class="btn ghost small" href="/dashboard">← My cards</a></div>
+  </nav>
+
+  <main>
+    <h1>Make it yours</h1>
+    <p class="sub">Fill in what you like — empty sections are hidden from the card automatically.</p>
+
+    <section class="panel">
+      <h2>The basics</h2>
+      <p class="hint">Who's it for, and who's it from?</p>
+      <div class="row">
+        <div class="field"><label for="recipient">Their name</label><input class="input" id="recipient" maxlength="60" placeholder="e.g. Daniel"></div>
+        <div class="field"><label for="sender">Your name</label><input class="input" id="sender" maxlength="60"></div>
+      </div>
+      <div class="field"><label for="birthday">Birthday</label><input class="input" id="birthday" type="date"></div>
+      <div class="field"><label>Colour mood</label>
+        <div class="themes" id="themes">
+          <label class="theme"><input type="radio" name="theme" value="rose"><span style="background:linear-gradient(135deg,#f2a7b8,#d9577a)"></span>Rose</label>
+          <label class="theme"><input type="radio" name="theme" value="lavender"><span style="background:linear-gradient(135deg,#c9b8f5,#8b6fd6)"></span>Lavender</label>
+          <label class="theme"><input type="radio" name="theme" value="midnight"><span style="background:linear-gradient(135deg,#1d2147,#e8b86a)"></span>Midnight</label>
+          <label class="theme"><input type="radio" name="theme" value="peach"><span style="background:linear-gradient(135deg,#f9bf9f,#ec7f5a)"></span>Peach</label>
+          <label class="theme"><input type="radio" name="theme" value="burgundy"><span style="background:linear-gradient(135deg,#6e0f26,#f2b6a8)"></span>Burgundy</label>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Envelope & card</h2>
+      <p class="hint">What they see before and right after they open it.</p>
+      <div class="field"><label for="cover">Envelope line</label><input class="input" id="cover" maxlength="80" placeholder="Open me, birthday boy"></div>
+      <div class="field"><label for="headline">Big headline</label><input class="input" id="headline" maxlength="100" placeholder="Happy Birthday, my love"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Your letter</h2>
+      <p class="hint">Words light up one by one as they scroll. Leave a blank line between paragraphs.</p>
+      <textarea class="input" id="letter" rows="10" maxlength="6000" placeholder="Dear…"></textarea>
+    </section>
+
+    <section class="panel">
+      <h2>Memories</h2>
+      <p class="hint">Photos glide past like polaroids. Add a caption and a date to each one.</p>
+      <div id="memories"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+        <label class="btn small" style="cursor:pointer">+ Add photos<input type="file" id="bulk" accept="image/*" multiple hidden></label>
+        <button class="btn ghost small" id="add-mem">+ Memory without photo</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Things I love about you</h2>
+      <p class="hint">Each one becomes a little card they tap to flip.</p>
+      <div id="notes"></div>
+      <button class="btn ghost small" id="add-note">+ Add another</button>
+    </section>
+
+    <section class="panel">
+      <h2>The finale</h2>
+      <p class="hint">Shown after they blow out the candles.</p>
+      <input class="input" id="finale" maxlength="200" placeholder="Make a wish — I already got mine.">
+    </section>
+
+    <section class="panel">
+      <h2>Your song ♫</h2>
+      <p class="hint">Add your favourite song. It fades in softly when they open the envelope, and they can pause or play it any time.</p>
+      <div id="music-empty" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <label class="btn small" style="cursor:pointer">+ Choose a song<input type="file" class="music-file" accept="audio/*,.mp3,.m4a,.aac,.ogg,.wav" hidden></label>
+        <span class="hint" style="margin:0">MP3 or M4A, up to 25 MB</span>
+      </div>
+      <div id="music-set" hidden>
+        <div class="field"><label for="music-title">Song name (shown on the card)</label><input class="input" id="music-title" maxlength="100" placeholder="e.g. Until I Found You — Stephen Sanchez"></div>
+        <audio id="music-preview" controls preload="metadata" style="width:100%"></audio>
+        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+          <label class="btn ghost small" style="cursor:pointer">Replace song<input type="file" class="music-file" accept="audio/*,.mp3,.m4a,.aac,.ogg,.wav" hidden></label>
+          <button class="btn danger small" id="music-remove" type="button">Remove song</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Invite friends (turned off for now)
+    <section class="panel">
+      <h2>Invite friends to sign it</h2>
+      <p class="hint">The invite link opens a simple "leave a message for them" page. Guests don't see the card itself, so the surprise stays a surprise. They don't need an account.</p>
+      <label class="switch"><input type="checkbox" id="guestbook"> Let invited people add messages</label>
+      <div class="field"><label>Invite link (send to friends & family)</label>
+        <div class="linkbox"><input class="input" id="invite-link" readonly><button class="btn small" data-copy="invite-link">Copy</button></div>
+      </div>
+      <button class="btn ghost small" id="reset-invite">Make a new invite link</button>
+      <h3 style="font-size:24px;margin:28px 0 4px">Messages so far</h3>
+      <div id="messages"></div>
+    </section>
+    -->
+
+    <section class="panel">
+      <h2>Send it ♥</h2>
+      <p class="hint">This is the link for the birthday person.</p>
+      <div class="linkbox"><input class="input" id="share-link" readonly><button class="btn small" data-copy="share-link">Copy</button></div>
+    </section>
+  </main>
+
+  <div class="savebar">
+    <span class="status" id="status">All changes saved</span>
+    <a class="btn ghost small" id="preview" target="_blank">Preview</a>
+    <button class="btn small" id="save">Save</button>
+  </div>
+
+  <script src="/app.js"></script>
+  <script src="/edit.js"></script>
+</body>
+</html>

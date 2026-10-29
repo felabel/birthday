@@ -1,0 +1,13 @@
+{
+  "name": "keepsake",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Animated, shareable birthday cards with guest messages and accounts.",
+  "scripts": {
+    "start": "node server.js",
+    "export": "node export.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
