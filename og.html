@@ -1,0 +1,58 @@
+<!doctype html>
+<!-- Link-preview image template (1200×630). export.js fills in the name and screenshots it with Chrome. -->
+<html>
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,800;1,9..144,700&family=Caveat:wght@700&family=DM+Sans:wght@700&display=block" rel="stylesheet">
+<style>
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    position: relative; font-family: 'DM Sans', sans-serif; color: #fbede6;
+    background:
+      radial-gradient(700px 500px at 15% 0%, rgba(158, 42, 69, .75), transparent 60%),
+      radial-gradient(600px 500px at 100% 100%, rgba(242, 182, 168, .22), transparent 60%),
+      linear-gradient(160deg, #3d0c1a, #2a0912);
+  }
+  .text { position: absolute; left: 80px; top: 120px; width: 520px; }
+  .eyebrow { font-size: 22px; letter-spacing: .32em; text-transform: uppercase; color: #f2b6a8; margin: 0 0 18px; }
+  h1 { font: 800 92px/1 'Fraunces', serif; margin: 0; letter-spacing: -.02em; }
+  .name { font: 700 104px/1.05 'Caveat', cursive; color: #f2b6a8; margin: 6px 0 0; rotate: -3deg; transform-origin: left; }
+  .tap { margin-top: 34px; display: inline-block; font-size: 24px; color: #3a0d1b; background: #f2b6a8; padding: 14px 28px; border-radius: 999px; }
+
+  .env { position: absolute; right: 90px; top: 150px; width: 470px; height: 314px; rotate: 6deg; filter: drop-shadow(0 40px 40px rgba(0,0,0,.45)); }
+  .env > div { position: absolute; inset: 0; border-radius: 14px; }
+  .back { background: #c98a8d; }
+  .letter { inset: 18px 28px auto 28px !important; height: 210px; top: -70px !important; background: #3a0d1b; border-radius: 10px;
+    display: grid; place-items: center; text-align: center; font: 700 44px 'Caveat', cursive; color: #f2b6a8; border: 2px solid rgba(230,192,123,.6); }
+  .pocket { background: linear-gradient(160deg, transparent 49.6%, rgba(0,0,0,.08) 50%), #e6a9a6; clip-path: polygon(0 0, 50% 56%, 100% 0, 100% 100%, 0 100%); }
+  .env .seal { inset: auto; left: 50%; top: 56%; border-radius: 50%; }
+  .seal { position: absolute; left: 50%; top: 56%; width: 92px; height: 92px; translate: -50% -50%; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #c2304f, #6e0f26 70%); color: #f2cf8e; font-size: 40px; display: grid; place-items: center;
+    box-shadow: inset 0 -5px 10px rgba(0,0,0,.3), 0 10px 20px rgba(60,0,20,.5); }
+
+  svg { position: absolute; fill: none; stroke: #fbede6; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
+  svg .w { fill: #3a0d1b; } svg .f { fill: #fbede6; stroke: none; }
+  .heart { color: #f2b6a8; position: absolute; font-size: 34px; opacity: .7; }
+</style>
+</head>
+<body>
+  <div class="text">
+    <p class="eyebrow">A birthday card</p>
+    <h1>Happy Birthday,</h1>
+    <p class="name">{{NAME}}</p>
+    <span class="tap">Tap to open 💌</span>
+  </div>
+  <div class="env">
+    <div class="back"></div>
+    <div class="letter">For you ♥</div>
+    <div class="pocket"></div>
+    <div class="seal">♥</div>
+  </div>
+  <svg viewBox="0 0 100 100" style="left:1060px;top:40px;width:96px"><circle class="w" cx="50" cy="50" r="34"/><path class="f" d="M50 36 L62 45 L58 59 L42 59 L38 45Z"/><path d="M50 36 L50 17 M62 45 L80 39 M58 59 L69 76 M42 59 L31 76 M38 45 L20 39"/></svg>
+  <svg viewBox="0 0 100 100" style="left:640px;top:470px;width:110px;rotate:-10deg"><path class="w" d="M50 12 C70 12 76 30 72 44 C68 58 56 64 50 64 C44 64 32 58 28 44 C24 30 30 12 50 12Z"/><path d="M47 64 L53 64 L50 69 Z M50 69 C42 78 58 84 48 96"/><path d="M38 28 Q40 22 46 21"/></svg>
+  <svg viewBox="0 0 100 100" style="left:1080px;top:470px;width:90px"><path class="w" d="M50 8 L61 36 L91 37 L67 56 L76 86 L50 68 L24 86 L33 56 L9 37 L39 36Z"/><circle class="f" cx="43" cy="48" r="2.5"/><circle class="f" cx="57" cy="48" r="2.5"/><path d="M45 57 Q50 61 55 57"/></svg>
+  <span class="heart" style="left:560px;top:60px">♥</span>
+  <span class="heart" style="left:560px;top:420px;font-size:24px">♥</span>
+  <span class="heart" style="left:1140px;top:300px;font-size:26px">♥</span>
+</body>
+</html>
