@@ -224,6 +224,8 @@
   const song = document.getElementById('song');
   const playBtn = document.getElementById('play-btn');
   const MAX_VOL = .8;
+  // iPhones/iPads don't let websites change volume (it's always 1), so fades never finish there.
+  const canFade = (() => { const a = new Audio(); a.volume = .5; return a.volume === .5; })();
   let fade;
   if (card.music?.url) {
     song.src = card.music.url;
@@ -231,10 +233,12 @@
   }
   function fadeTo(target, ms, done) {
     clearInterval(fade);
-    const step = (target - song.volume) / Math.max(1, ms / 50);
+    if (!canFade) return done?.();
+    const steps = Math.max(1, ms / 50), step = (target - song.volume) / steps;
+    let n = 0;
     fade = setInterval(() => {
       const v = song.volume + step;
-      if ((step >= 0 && v >= target) || (step < 0 && v <= target)) { song.volume = target; clearInterval(fade); done?.(); }
+      if (++n >= steps || (step >= 0 && v >= target) || (step < 0 && v <= target)) { song.volume = target; clearInterval(fade); done?.(); }
       else song.volume = Math.min(1, Math.max(0, v));
     }, 50);
   }
@@ -243,7 +247,7 @@
     playBtn.setAttribute('aria-label', on ? 'Pause music' : 'Play music');
   }
   function playSong(fadeMs = 1200) {
-    song.volume = 0;
+    if (canFade) song.volume = 0;
     song.play().then(() => { setPlaying(true); fadeTo(MAX_VOL, fadeMs); }).catch(() => setPlaying(false));
   }
   function pauseSong() { setPlaying(false); fadeTo(0, 500, () => song.pause()); }
@@ -254,7 +258,7 @@
     if (hasGsap && !reduced) gsap.from(player, { y: 90, scale: .6, opacity: 0, duration: 1.2, ease: 'back.out(2)', delay: 1.2 });
   }
   playBtn.addEventListener('click', () => (song.paused || !player.classList.contains('playing') ? playSong() : pauseSong()));
-  song.addEventListener('pause', () => { if (song.volume > 0) setPlaying(false); });
+  song.addEventListener('pause', () => setPlaying(false));
 
   // ---------- the opening sequence ----------
   const intro = document.getElementById('intro');
