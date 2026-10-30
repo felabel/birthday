@@ -38,6 +38,17 @@
     .msg { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 14px 0; border-top: 1px solid var(--line); }
     .msg p { margin: 0; font-family: var(--serif); font-size: 18px; }
     .msg small { color: var(--ink-soft); }
+    .pairs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; }
+    .pair { display: grid; grid-template-columns: 1fr 70px; gap: 6px; }
+    .pair.wide { grid-template-columns: 1fr 1fr auto; }
+    .picks { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pick { width: 58px; height: 58px; border-radius: 10px; border: 3px solid transparent; background: var(--bg) center/cover; cursor: pointer; padding: 0; }
+    .pick.on { border-color: var(--accent); transform: scale(1.06); }
+    .qbox { border-top: 1px solid var(--line); padding: 16px 0; display: grid; gap: 8px; }
+    .opt { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; font-size: 13px; }
+    .item { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: start; margin-bottom: 10px; }
+    .item .stack { display: grid; gap: 8px; }
+    .extras-title { font-size: clamp(30px, 5vw, 42px); margin: 54px 0 6px; }
     .savebar { position: fixed; left: 50%; bottom: 20px; translate: -50% 0; z-index: 40; display: flex; gap: 10px; align-items: center;
       background: color-mix(in srgb, var(--paper) 85%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
       padding: 10px 10px 10px 20px; border-radius: 999px; box-shadow: var(--shadow); border: 1px solid var(--line); font-size: 14px; white-space: nowrap; }
@@ -102,6 +113,67 @@
       <p class="hint">Each one becomes a little card they tap to flip.</p>
       <div id="notes"></div>
       <button class="btn ghost small" id="add-note">+ Add another</button>
+    </section>
+
+    <h2 class="extras-title">The fun stuff ⚽</h2>
+    <p class="sub">Each section only shows on the card if it has something in it. Clear it out to hide it.</p>
+
+    <section class="panel">
+      <h2>Player card</h2>
+      <p class="hint">A gold, FIFA-style card. Tap it on the card and it flips to show his stats.</p>
+      <div class="row">
+        <div class="field"><label for="pl-name">Name on the card</label><input class="input" id="pl-name" maxlength="24" placeholder="e.g. Bishop"></div>
+        <div class="field"><label for="pl-number">Shirt number</label><input class="input" id="pl-number" maxlength="3" placeholder="e.g. 3"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="pl-position">Position</label><input class="input" id="pl-position" maxlength="6" placeholder="e.g. BAE"></div>
+        <div class="field"><label for="pl-overall">Overall rating</label><input class="input" id="pl-overall" maxlength="3" placeholder="99"></div>
+      </div>
+      <div class="field"><label>Photo (pick one of your memories)</label><div class="picks" id="pl-photos"></div></div>
+      <div class="field"><label>Ratings (front of the card)</label><div class="pairs" id="pl-ratings"></div></div>
+      <div class="field"><label>Career stats (back of the card)</label><div id="pl-stats"></div>
+        <button class="btn ghost small" id="pl-add-stat" type="button">+ Add a stat</button></div>
+    </section>
+
+    <section class="panel">
+      <h2>Penalty shootout</h2>
+      <p class="hint">He taps the goal to shoot. Each goal unlocks one of these, in order.</p>
+      <div id="shots"></div>
+      <div class="field"><label for="shot-final">Final whistle message</label><input class="input" id="shot-final" maxlength="300" placeholder="Even when United lose, you'll always be my winner"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Pop quiz</h2>
+      <p class="hint">Tick the right answer for each question.</p>
+      <div id="quiz"></div>
+      <button class="btn ghost small" id="add-q" type="button">+ Add a question</button>
+    </section>
+
+    <section class="panel">
+      <h2>Open when… letters</h2>
+      <p class="hint">Little envelopes he opens for different moods.</p>
+      <div id="ow"></div>
+      <button class="btn ghost small" id="add-ow" type="button">+ Add a letter</button>
+    </section>
+
+    <section class="panel">
+      <h2>Love coupons</h2>
+      <p class="hint">He taps one to redeem it and it gets stamped "Redeemed".</p>
+      <div id="coupons"></div>
+      <button class="btn ghost small" id="add-coupon" type="button">+ Add a coupon</button>
+    </section>
+
+    <section class="panel">
+      <h2>Scratch-off surprise</h2>
+      <p class="hint">He scratches a silver panel to reveal this.</p>
+      <div class="field"><label for="sc-title">Small title</label><input class="input" id="sc-title" maxlength="60" placeholder="Your surprise 🎁"></div>
+      <div class="field"><label for="sc-text">The surprise</label><input class="input" id="sc-text" maxlength="200" placeholder="Dinner date Saturday, I'm paying 😌"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Man of the Match</h2>
+      <p class="hint">A trophy moment before the cake, with a stadium roar when he lifts it.</p>
+      <input class="input" id="motm" maxlength="200" placeholder="Every match, every season.">
     </section>
 
     <section class="panel">

@@ -84,6 +84,9 @@
     grid.append(note);
   });
 
+  // Player card, penalty shootout, quiz, letters, coupons, scratch card, man of the match (extras.js)
+  const extras = window.renderExtras?.(card, { confetti, heartBurst, hasGsap, reduced, getLenis: () => lenis });
+
   // Guestbook — turned off for now (the section is commented out in card.html).
   // const gbGrid = document.querySelector('.gb-grid');
   // const msgNode = (m) => el('article', { class: 'gb-msg', style: `rotate:${(Math.random() * 3 - 1.5).toFixed(2)}deg` },
@@ -160,13 +163,13 @@
 
   // Effects layer particles (confetti, bursts, cursor sparkles)
   const parts = [];
-  function confetti(x, y, n = 120, power = 1) {
+  function confetti(x, y, n = 120, power = 1, colors = palette) {
     for (let i = 0; i < n; i++) {
       const ang = Math.random() * Math.PI * 2, sp = (4 + Math.random() * 9) * power;
       parts.push({
         x, y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp - 6 * power, g: .22, drag: .985,
         s: 6 + Math.random() * 8, rot: Math.random() * 6, vr: (Math.random() - .5) * .3,
-        c: palette[(Math.random() * palette.length) | 0], life: 1, decay: .006 + Math.random() * .008,
+        c: colors[(Math.random() * colors.length) | 0], life: 1, decay: .006 + Math.random() * .008,
         kind: Math.random() < .45 ? 'heart' : 'ribbon',
       });
     }
@@ -380,7 +383,8 @@
     if (!hasGsap || reduced) {
       story.querySelectorAll('.w').forEach((w) => (w.style.opacity = 1));
       story.querySelector('.finale-after').style.visibility = 'visible';
-      return done();
+      done();
+      return extras?.animate();
     }
     gsap.timeline()
       .to(book, { scale: 1.25, opacity: 0, filter: 'blur(14px)', duration: 1.1, ease: 'power2.in' })
@@ -457,6 +461,8 @@
     gsap.utils.toArray('.gb-msg, .gb-form').forEach((m, i) => {
       gsap.from(m, { y: 70, opacity: 0, scale: .94, duration: 1.4, ease: 'expo.out', delay: (i % 3) * .1, scrollTrigger: { trigger: m, start: 'top 92%' } });
     });
+
+    extras?.animate();
 
     // finale
     gsap.from('.cake', { y: 80, scale: .8, opacity: 0, duration: 1.8, ease: 'elastic.out(1, .7)', scrollTrigger: { trigger: '.cake', start: 'top 90%' } });

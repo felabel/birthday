@@ -200,7 +200,31 @@ function sanitizeCard(input, card) {
       id: str(m.id, 20) || id(), image: okImage(m.image), caption: str(m.caption, 120), date: str(m.date, 40),
     }));
   }
+  if (input.extras && typeof input.extras === 'object') card.extras = sanitizeExtras(input.extras);
   if (Array.isArray(input.notes)) card.notes = input.notes.slice(0, 30).map((n) => str(n, 200)).filter(Boolean);
+}
+
+// Fun sections: player card, penalty shootout, quiz, "open when" letters, coupons, scratch card, man of the match.
+function sanitizeExtras(x) {
+  const list = (v, n) => (Array.isArray(v) ? v.slice(0, n) : []);
+  const pairs = (v, n) => list(v, n).map((r) => ({ label: str(r?.label, 40), value: str(r?.value, 40) })).filter((r) => r.label);
+  const p = x.player || {};
+  const q = x.quiz || [];
+  return {
+    player: {
+      name: str(p.name, 24), number: str(p.number, 3), position: str(p.position, 6), overall: str(p.overall, 3),
+      photo: typeof p.photo === 'string' && p.photo.startsWith('/uploads/') ? p.photo : null,
+      ratings: pairs(p.ratings, 6), stats: pairs(p.stats, 8),
+    },
+    shootout: { prizes: list(x.shootout?.prizes, 5).map((t) => str(t, 160)).filter(Boolean), final: str(x.shootout?.final, 300) },
+    quiz: list(q, 8).map((r) => ({
+      q: str(r?.q, 160), options: list(r?.options, 4).map((o) => str(o, 80)), answer: Math.max(0, Math.min(3, Number(r?.answer) || 0)),
+    })).filter((r) => r.q && r.options.filter(Boolean).length >= 2),
+    openWhen: list(x.openWhen, 8).map((r) => ({ label: str(r?.label, 60), text: str(r?.text, 1500) })).filter((r) => r.label && r.text),
+    coupons: list(x.coupons, 12).map((t) => str(t, 100)).filter(Boolean),
+    scratch: { title: str(x.scratch?.title, 60), text: str(x.scratch?.text, 200) },
+    motm: { text: str(x.motm?.text, 200) },
+  };
 }
 
 // ---------- API ----------
@@ -276,6 +300,10 @@ async function api(req, res, pathname, url) {
 
     if (req.method === 'PUT') {
       const b = await readBody(req);
+      // An editor tab opened before the latest save mustn't overwrite newer changes.
+      if (!b.regenerateInvite && b.baseUpdatedAt !== card.updatedAt) {
+        return send(res, 409, { error: 'This card was changed in another tab. Reload the page to get the latest version.' });
+      }
       sanitizeCard(b, card);
       if (b.regenerateInvite) card.inviteToken = id(16);
       card.updatedAt = now(); save();

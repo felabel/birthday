@@ -19,18 +19,18 @@ if (!card) { console.error(wanted ? `No card with id "${wanted}".` : 'No card fo
 const data = {
   slug: card.slug, recipient: card.recipient, sender: card.sender, birthday: card.birthday, theme: card.theme,
   cover: card.cover, headline: card.headline, letter: card.letter, memories: card.memories, notes: card.notes,
-  finale: card.finale, music: card.music, guestbook: false,
+  finale: card.finale, music: card.music, extras: card.extras || null, guestbook: false,
   messages: card.messages.map(({ name, text, createdAt }) => ({ name, text, createdAt })),
 };
 
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(path.join(OUT, 'uploads'), { recursive: true });
 
-for (const f of ['base.css', 'card.css', 'app.js', 'doodles.js', 'card.js']) {
+for (const f of ['base.css', 'card.css', 'extras.css', 'app.js', 'doodles.js', 'extras.js', 'card.js']) {
   fs.copyFileSync(path.join(ROOT, 'public', f), path.join(OUT, f));
 }
 
-const files = [...data.memories.map((m) => m.image), data.music?.url].filter(Boolean);
+const files = [...new Set([...data.memories.map((m) => m.image), data.music?.url, data.extras?.player?.photo].filter(Boolean))];
 for (const url of files) {
   const name = path.basename(url);
   fs.copyFileSync(path.join(ROOT, 'uploads', name), path.join(OUT, 'uploads', name));

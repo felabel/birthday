@@ -50,6 +50,7 @@
           m.image ? el('button', { class: 'icon', title: 'Remove photo', 'aria-label': 'Remove photo', onclick: () => { m.image = null; markDirty(); renderMemories(); } }, '⌫') : null,
           el('button', { class: 'icon', title: 'Delete memory', 'aria-label': 'Delete memory', onclick: () => { card.memories.splice(i, 1); markDirty(); renderMemories(); } }, '✕')));
     }));
+    dispatchEvent(new Event('memories-changed')); // keeps the player-card photo picker in sync
   }
   function move(arr, i, d, rerender) {
     const j = i + d; if (j < 0 || j >= arr.length) return;
@@ -127,6 +128,81 @@
   $('music-remove').addEventListener('click', () => { card.music = null; renderMusic(); markDirty(); });
   renderMusic();
 
+  // ---------- fun stuff (player card, shootout, quiz, letters, coupons, scratch, man of the match) ----------
+  const X = card.extras = Object.assign({ player: {}, shootout: {}, quiz: [], openWhen: [], coupons: [], scratch: {}, motm: {} }, card.extras || {});
+  const P = X.player = Object.assign({ name: '', number: '', position: '', overall: '', photo: null, ratings: [], stats: [] }, X.player);
+  X.shootout = Object.assign({ prizes: [], final: '' }, X.shootout);
+  const bind = (id, obj, key) => { const n = $(id); n.value = obj[key] || ''; n.addEventListener('input', () => (obj[key] = n.value)); };
+  bind('pl-name', P, 'name'); bind('pl-number', P, 'number'); bind('pl-position', P, 'position'); bind('pl-overall', P, 'overall');
+  bind('shot-final', X.shootout, 'final');
+  X.scratch = Object.assign({ title: '', text: '' }, X.scratch); bind('sc-title', X.scratch, 'title'); bind('sc-text', X.scratch, 'text');
+  X.motm = Object.assign({ text: '' }, X.motm); bind('motm', X.motm, 'text');
+  const input = (value, attrs, onInput) => { const n = el('input', { class: 'input', value: value || '', ...attrs }); n.addEventListener('input', () => onInput(n.value)); return n; };
+  const del = (onclick) => el('button', { class: 'icon', type: 'button', 'aria-label': 'Delete', onclick: () => { onclick(); markDirty(); } }, '✕');
+
+  function renderPhotos() {
+    const imgs = card.memories.map((m) => m.image).filter(Boolean);
+    $('pl-photos').replaceChildren(...imgs.map((src) => el('button', { type: 'button', class: `pick${P.photo === src ? ' on' : ''}`, style: `background-image:url('${src}')`,
+      'aria-label': 'Use this photo', onclick: () => { P.photo = src; markDirty(); renderPhotos(); } })));
+    if (!imgs.length) $('pl-photos').replaceChildren(el('span', { class: 'hint', style: 'margin:0' }, 'Add memory photos first.'));
+  }
+  function renderRatings() {
+    while (P.ratings.length < 6) P.ratings.push({ label: '', value: '' });
+    $('pl-ratings').replaceChildren(...P.ratings.map((r) => el('div', { class: 'pair' },
+      input(r.label, { maxlength: 40, placeholder: 'e.g. Hugs' }, (v) => (r.label = v)),
+      input(r.value, { maxlength: 3, placeholder: '99' }, (v) => (r.value = v)))));
+  }
+  function renderStats() {
+    $('pl-stats').replaceChildren(...P.stats.map((s, i) => el('div', { class: 'pair wide', style: 'margin-bottom:8px' },
+      input(s.label, { maxlength: 40, placeholder: 'e.g. Assists' }, (v) => (s.label = v)),
+      input(s.value, { maxlength: 40, placeholder: 'e.g. Endless' }, (v) => (s.value = v)),
+      del(() => { P.stats.splice(i, 1); renderStats(); }))));
+  }
+  $('pl-add-stat').addEventListener('click', () => { if (P.stats.length < 8) { P.stats.push({ label: '', value: '' }); renderStats(); } });
+
+  function renderShots() {
+    const pr = X.shootout.prizes;
+    $('shots').replaceChildren(...[0, 1, 2, 3, 4].map((i) => el('div', { class: 'field' }, el('label', {}, `Goal ${i + 1} unlocks…`),
+      input(pr[i], { maxlength: 160, placeholder: i ? '' : 'e.g. GOAL! You\'re my favourite person' }, (v) => (pr[i] = v)))));
+  }
+
+  function renderQuiz() {
+    $('quiz').replaceChildren(...X.quiz.map((q, qi) => {
+      while (q.options.length < 3) q.options.push('');
+      const name = `q${qi}-${Math.random().toString(36).slice(2, 6)}`;
+      return el('div', { class: 'qbox' },
+        el('div', { class: 'item' }, input(q.q, { maxlength: 160, placeholder: 'Question, e.g. Who\'s the better cook?' }, (v) => (q.q = v)),
+          del(() => { X.quiz.splice(qi, 1); renderQuiz(); })),
+        ...q.options.map((o, oi) => {
+          const radio = el('input', { type: 'radio', name, checked: q.answer === oi, 'aria-label': 'Correct answer' });
+          radio.addEventListener('change', () => { q.answer = oi; markDirty(); });
+          return el('label', { class: 'opt' }, radio, input(o, { maxlength: 80, placeholder: `Answer ${oi + 1}` }, (v) => (q.options[oi] = v)));
+        }));
+    }));
+  }
+  $('add-q').addEventListener('click', () => { if (X.quiz.length < 8) { X.quiz.push({ q: '', options: ['', '', ''], answer: 0 }); markDirty(); renderQuiz(); } });
+
+  function renderOw() {
+    $('ow').replaceChildren(...X.openWhen.map((o, i) => {
+      const text = el('textarea', { class: 'input', rows: 3, maxlength: 1500, placeholder: 'What the letter says…' }); text.value = o.text || '';
+      text.addEventListener('input', () => (o.text = text.value));
+      return el('div', { class: 'item' }, el('div', { class: 'stack' },
+        input(o.label, { maxlength: 60, placeholder: 'Open when… e.g. you miss me' }, (v) => (o.label = v)), text),
+        del(() => { X.openWhen.splice(i, 1); renderOw(); }));
+    }));
+  }
+  $('add-ow').addEventListener('click', () => { if (X.openWhen.length < 8) { X.openWhen.push({ label: '', text: '' }); markDirty(); renderOw(); } });
+
+  function renderCoupons() {
+    $('coupons').replaceChildren(...X.coupons.map((c, i) => el('div', { class: 'item' },
+      input(c, { maxlength: 100, placeholder: 'e.g. One free massage' }, (v) => (X.coupons[i] = v)),
+      del(() => { X.coupons.splice(i, 1); renderCoupons(); }))));
+  }
+  $('add-coupon').addEventListener('click', () => { if (X.coupons.length < 12) { X.coupons.push(''); markDirty(); renderCoupons(); } });
+
+  addEventListener('memories-changed', renderPhotos);
+  renderPhotos(); renderRatings(); renderStats(); renderShots(); renderQuiz(); renderOw(); renderCoupons();
+
   // ---------- guest messages ----------
   // function renderMessages() {
   //   const box = $('messages');
@@ -155,13 +231,17 @@
 
   // ---------- save ----------
   async function save() {
-    const body = { music: card.music || null, memories: card.memories, notes: card.notes.filter((n) => n.trim()), theme: document.querySelector('input[name=theme]:checked').value };
+    const body = { baseUpdatedAt: card.updatedAt, extras: card.extras, music: card.music || null, memories: card.memories, notes: card.notes.filter((n) => n.trim()), theme: document.querySelector('input[name=theme]:checked').value };
     SIMPLE.forEach((k) => (body[k] = $(k).value));
     $('save').disabled = true; status.textContent = 'Saving…';
     try {
-      await api(`/api/cards/${slug}`, { method: 'PUT', body });
+      const res = await api(`/api/cards/${slug}`, { method: 'PUT', body });
+      card.updatedAt = res.card.updatedAt;
       dirty = false; status.textContent = 'All changes saved'; toast('Saved ♥');
-    } catch (err) { status.textContent = 'Could not save'; toast(err.message); }
+    } catch (err) {
+      status.textContent = 'Could not save'; toast(err.message);
+      if (err.status === 409 && confirm(`${err.message}\n\nReload now?`)) { dirty = false; location.reload(); }
+    }
     $('save').disabled = false;
   }
   $('save').addEventListener('click', save);

@@ -3,7 +3,7 @@
     "slug": "ofbLMamK",
     "ownerId": "VahyFM7qkLfm",
     "createdAt": "2026-10-29T16:32:11.567Z",
-    "updatedAt": "2026-10-30T04:54:34.810Z",
+    "updatedAt": "2026-10-30T05:14:20.177Z",
     "recipient": "My babyyyy",
     "sender": "Perfect Sunshine",
     "birthday": "2026-10-30",
@@ -61,37 +61,37 @@
         "date": ""
       },
       {
-        "id": "GYyAkX7E6o8J",
+        "id": "MMBgFxrmRcWi",
         "image": "/uploads/C4p8DSaCdcv8z-pt.jpg",
         "caption": "First white wedding together I think",
         "date": ""
       },
       {
-        "id": "ATMD-TkeCrbS",
+        "id": "xniJfFWCjUmR",
         "image": "/uploads/NWNkr_Q5GAmujJFj.jpg",
         "caption": "My haaaaandsoooome",
         "date": ""
       },
       {
-        "id": "oUkqgvEDM7x1",
+        "id": "Z5wJ1dcKz8SC",
         "image": "/uploads/9q29f4aLm83TwdqF.jpg",
         "caption": "Just being a fynnnnnn thannnng",
         "date": ""
       },
       {
-        "id": "SH5ZnJw8TkJz",
+        "id": "qRAp_4TeVfHH",
         "image": "/uploads/2WBJG0I9k4p5C1SL.jpg",
         "caption": "",
         "date": ""
       },
       {
-        "id": "0xzBrL5Uwfyz",
+        "id": "TSXtZT-0xpOG",
         "image": "/uploads/9xuzO1-XEq551zh9.jpg",
         "caption": "",
         "date": ""
       },
       {
-        "id": "2VOr3cVNqi35",
+        "id": "qM9zkzMsRAXG",
         "image": "/uploads/vfetWUlVkKWqrIUs.jpg",
         "caption": "",
         "date": ""
@@ -124,6 +124,148 @@
     "music": {
       "url": "/uploads/shwMXsBuhlugG7kr.aac",
       "title": "Busy Signal Happy Birthday (mp3.pm)"
+    },
+    "extras": {
+      "player": {
+        "name": "Bishop",
+        "number": "3",
+        "position": "BAE",
+        "overall": "99",
+        "photo": "/uploads/JhV4jyrZAJEKGhTg.jpg",
+        "ratings": [
+          {
+            "label": "Hugs",
+            "value": "99"
+          },
+          {
+            "label": "Rizz",
+            "value": "97"
+          },
+          {
+            "label": "Loyalty",
+            "value": "99"
+          },
+          {
+            "label": "Humour",
+            "value": "95"
+          },
+          {
+            "label": "Dance",
+            "value": "72"
+          },
+          {
+            "label": "On time",
+            "value": "41"
+          }
+        ],
+        "stats": [
+          {
+            "label": "Club",
+            "value": "Man United ❤️"
+          },
+          {
+            "label": "Assists",
+            "value": "Endless"
+          },
+          {
+            "label": "Laughs caused",
+            "value": "∞"
+          },
+          {
+            "label": "Red cards",
+            "value": "0 (so far 👀)"
+          },
+          {
+            "label": "Transfer value",
+            "value": "Priceless"
+          },
+          {
+            "label": "Contract",
+            "value": "For life"
+          }
+        ]
+      },
+      "shootout": {
+        "prizes": [
+          "GOAL! You are my favourite person in the whole world ❤️",
+          "Another one! I would pick you every single time",
+          "Hat-trick hero, dinner is on me 🍽️",
+          "Unstoppable, just like your snoring 😂",
+          "What a finish, you make every day better"
+        ],
+        "final": "Even when United lose, you will always be my winner 🏆"
+      },
+      "quiz": [
+        {
+          "q": "Who is the better cook?",
+          "options": [
+            "Felicity 😌",
+            "Bishop",
+            "Uber Eats"
+          ],
+          "answer": 0
+        },
+        {
+          "q": "What is the best club in the world?",
+          "options": [
+            "Manchester United",
+            "Manchester United",
+            "Also Manchester United"
+          ],
+          "answer": 0
+        },
+        {
+          "q": "Who falls asleep first during a movie?",
+          "options": [
+            "Bishop",
+            "Felicity",
+            "Both, within 10 minutes"
+          ],
+          "answer": 0
+        },
+        {
+          "q": "Who loves who more?",
+          "options": [
+            "Me",
+            "You",
+            "Not a competition (it is me)"
+          ],
+          "answer": 2
+        }
+      ],
+      "openWhen": [
+        {
+          "label": "you miss me",
+          "text": "Close your eyes and think about our last hug. That is me, right there.\nCall me. I am probably missing you too ❤️"
+        },
+        {
+          "label": "Man United lose 😭",
+          "text": "Breathe. It is just a game (I know, I know, it is not just a game).\nWe go again next week. GGMU. And I am still here to cheer you up."
+        },
+        {
+          "label": "you are stressed",
+          "text": "You are doing so much better than you think. Take a break, drink some water, and remember I am so proud of you."
+        },
+        {
+          "label": "you cannot sleep",
+          "text": "Count the times I have laughed at your jokes. You will be asleep before you finish. Goodnight, my love 🌙"
+        }
+      ],
+      "coupons": [
+        "One free massage 💆🏾‍♂️",
+        "Breakfast in bed 🥞",
+        "Uninterrupted match day, no questions asked ⚽",
+        "You pick the restaurant",
+        "Win one argument (use it wisely)",
+        "Movie night, your choice 🍿"
+      ],
+      "scratch": {
+        "title": "Your surprise 🎁",
+        "text": "Dinner date, I am paying 😌"
+      },
+      "motm": {
+        "text": "Every match, every season. Happy birthday, my love."
+      }
     }
   }
 ]

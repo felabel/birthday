@@ -12,9 +12,12 @@ window.DOODLES = {
   crown: '<path class="w" d="M16 72 L12 30 L32 50 L50 22 L68 50 L88 30 L84 72Z"/><path d="M16 82 L84 82"/><circle class="f" cx="50" cy="56" r="4"/>',
   heart: '<path class="w" d="M50 84 C20 62 10 46 14 32 C18 18 38 14 50 32 C62 14 82 18 86 32 C90 46 80 62 50 84Z"/><path d="M30 34 Q34 28 40 30"/>',
   snail: '<path d="M10 78 L80 78 Q92 78 90 66 L84 60"/><circle class="w" cx="50" cy="56" r="20"/><path d="M50 48 a8 8 0 1 1 -8 8 a4 4 0 1 1 4 -4"/><path d="M84 60 L80 44 M88 60 L92 44"/><circle class="f" cx="80" cy="42" r="2.5"/><circle class="f" cx="92" cy="42" r="2.5"/>',
+  devil: '<path class="w" d="M26 58 Q24 30 50 28 Q76 30 74 58 Q72 80 50 82 Q28 80 26 58Z"/><path class="w" d="M30 36 Q22 22 28 10 Q34 22 40 30 M70 36 Q78 22 72 10 Q66 22 60 30"/><path d="M38 48 L46 52 M62 48 L54 52"/><circle class="f" cx="42" cy="56" r="3"/><circle class="f" cx="58" cy="56" r="3"/><path d="M40 68 Q50 76 60 68 M74 70 Q90 72 88 88 L92 84 M88 88 L84 84"/>',
+  football: '<circle class="w" cx="50" cy="50" r="34"/><path class="f" d="M50 36 L62 45 L58 59 L42 59 L38 45Z"/><path d="M50 36 L50 17 M62 45 L80 39 M58 59 L69 76 M42 59 L31 76 M38 45 L20 39"/>',
+  trophy: '<path class="w" d="M32 16 L68 16 L66 44 Q64 60 50 62 Q36 60 34 44Z"/><path d="M33 22 Q16 22 20 36 Q24 46 35 46 M67 22 Q84 22 80 36 Q76 46 65 46 M50 62 L50 74 M36 84 L64 84 L60 74 L40 74Z"/><path d="M44 30 L50 26 L50 46"/>',
   worm: '<path d="M12 80 C22 60 32 90 42 70 S62 55 70 50"/><circle class="w" cx="78" cy="42" r="11"/><circle class="f" cx="75" cy="40" r="2"/><circle class="f" cx="82" cy="40" r="2"/><path d="M75 47 Q78 49 81 47 M70 32 L66 20 L76 26 L80 14 L84 29"/>',
 };
-window.DOODLE_WORDS = ['hbd!!', 'yay!!', 'ily', 'old man lol', 'cutie', 'party time', 'wish big', 'wooo', 'ur the best', 'cake pls'];
+window.DOODLE_WORDS = ['hbd!!', 'yay!!', 'ily', 'old man lol', 'cutie', 'party time', 'wish big', 'wooo', 'ur the best', 'cake pls', 'GGMU!!', 'glory glory', 'siuuu'];
 
 window.doodleSVG = function (name) {
   return `<svg viewBox="0 0 100 100" aria-hidden="true">${window.DOODLES[name]}</svg>`;
