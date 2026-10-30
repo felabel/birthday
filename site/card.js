@@ -84,35 +84,35 @@
     grid.append(note);
   });
 
-  // Guestbook
-  const gbGrid = document.querySelector('.gb-grid');
-  const msgNode = (m) => el('article', { class: 'gb-msg', style: `rotate:${(Math.random() * 3 - 1.5).toFixed(2)}deg` },
-    el('p', {}, m.text), el('div', { class: 'who' }, `— ${m.name}`));
-  card.messages.forEach((m) => gbGrid.append(msgNode(m)));
-  const gbForm = document.getElementById('gb-form');
-  if (canPost) gbForm.hidden = false;
-  if (!card.messages.length && !canPost) document.getElementById('guestbook').remove();
+  // Guestbook — turned off for now (the section is commented out in card.html).
+  // const gbGrid = document.querySelector('.gb-grid');
+  // const msgNode = (m) => el('article', { class: 'gb-msg', style: `rotate:${(Math.random() * 3 - 1.5).toFixed(2)}deg` },
+  //   el('p', {}, m.text), el('div', { class: 'who' }, `— ${m.name}`));
+  // card.messages.forEach((m) => gbGrid.append(msgNode(m)));
+  // const gbForm = document.getElementById('gb-form');
+  // if (canPost) gbForm.hidden = false;
+  // if (!card.messages.length && !canPost) document.getElementById('guestbook').remove();
 
-  gbForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn = gbForm.querySelector('button');
-    btn.disabled = true;
-    try {
-      const { message } = await api(`/api/cards/${slug}/messages`, {
-        method: 'POST',
-        body: { name: gbForm.querySelector('#gb-name').value, text: gbForm.querySelector('#gb-text').value },
-      });
-      const node = msgNode(message);
-      gbGrid.prepend(node);
-      gbForm.reset();
-      const r = gbForm.getBoundingClientRect();
-      confetti(r.left + r.width / 2, r.top + 40, 90);
-      if (hasGsap) gsap.from(node, { scale: .6, y: 60, opacity: 0, duration: 1.2, ease: 'elastic.out(1, .6)' });
-      toast('Your message was added ♥');
-      window.ScrollTrigger?.refresh();
-    } catch (err) { toast(err.message); }
-    btn.disabled = false;
-  });
+  // gbForm.addEventListener('submit', async (e) => {
+  //   e.preventDefault();
+  //   const btn = gbForm.querySelector('button');
+  //   btn.disabled = true;
+  //   try {
+  //     const { message } = await api(`/api/cards/${slug}/messages`, {
+  //       method: 'POST',
+  //       body: { name: gbForm.querySelector('#gb-name').value, text: gbForm.querySelector('#gb-text').value },
+  //     });
+  //     const node = msgNode(message);
+  //     gbGrid.prepend(node);
+  //     gbForm.reset();
+  //     const r = gbForm.getBoundingClientRect();
+  //     confetti(r.left + r.width / 2, r.top + 40, 90);
+  //     if (hasGsap) gsap.from(node, { scale: .6, y: 60, opacity: 0, duration: 1.2, ease: 'elastic.out(1, .6)' });
+  //     toast('Your message was added ♥');
+  //     window.ScrollTrigger?.refresh();
+  //   } catch (err) { toast(err.message); }
+  //   btn.disabled = false;
+  // });
 
   // Floating helpers
   if (isOwner) {

@@ -1,7 +1,7 @@
-# Private: accounts, password hashes and the original uploads stay on this computer.
-# The finished card (photos included) is exported to site/, which is what gets deployed.
-/data/
-/uploads/
+# Accounts and login sessions stay on this computer (password hashes don't belong on GitHub).
+# The card itself is backed up in data/cards.json and uploads/, which ARE committed.
+/data/db.json
+*.tmp
 node_modules/
 .vercel/
 .DS_Store

@@ -37,6 +37,7 @@
         thumb.textContent = 'Uploading…';
         try { m.image = await upload(file.files[0]); markDirty(); } catch (err) { toast(err.message); }
         renderMemories();
+        if (dirty) save();
       });
       const caption = el('input', { class: 'input', placeholder: 'Caption — e.g. Our first date', maxlength: 120, value: m.caption || '' });
       const date = el('input', { class: 'input', placeholder: 'When — e.g. Summer 2024', maxlength: 40, value: m.date || '' });
@@ -55,18 +56,27 @@
     [arr[i], arr[j]] = [arr[j], arr[i]]; markDirty(); rerender();
   }
   async function upload(f) {
-    const data = await resizeImage(f);
-    return (await api('/api/upload', { method: 'POST', body: { data } })).url;
+    let data;
+    try { data = await resizeImage(f); } catch { data = null; }
+    if (data) return (await api('/api/upload', { method: 'POST', body: { data } })).url;
+    // The browser can't read this format (e.g. iPhone HEIC): let the server convert it.
+    const res = await fetch('/api/upload-image', { method: 'POST', headers: { 'Content-Type': f.type || 'application/octet-stream' }, body: f, credentials: 'same-origin' });
+    const out = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(out.error || `Couldn't upload ${f.name}.`);
+    return out.url;
   }
   $('add-mem').addEventListener('click', () => { card.memories.push({ caption: '', date: '', image: null }); markDirty(); renderMemories(); });
   $('bulk').addEventListener('change', async (e) => {
     const files = [...e.target.files]; e.target.value = '';
+    let failed = 0;
     for (const f of files) {
       status.textContent = `Uploading ${files.indexOf(f) + 1} of ${files.length}…`;
       try { card.memories.push({ caption: '', date: '', image: await upload(f) }); renderMemories(); }
-      catch (err) { toast(err.message); }
+      catch (err) { failed++; toast(err.message || `Couldn't upload ${f.name}.`); }
     }
     markDirty();
+    await save(); // keep new photos safe straight away
+    if (failed) toast(`${failed} photo${failed > 1 ? 's' : ''} couldn't be uploaded.`);
   });
   renderMemories();
 
@@ -149,8 +159,7 @@
     SIMPLE.forEach((k) => (body[k] = $(k).value));
     $('save').disabled = true; status.textContent = 'Saving…';
     try {
-      const res = await api(`/api/cards/${slug}`, { method: 'PUT', body });
-      card.memories = res.card.memories;
+      await api(`/api/cards/${slug}`, { method: 'PUT', body });
       dirty = false; status.textContent = 'All changes saved'; toast('Saved ♥');
     } catch (err) { status.textContent = 'Could not save'; toast(err.message); }
     $('save').disabled = false;

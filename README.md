@@ -22,4 +22,8 @@ Open http://localhost:3001, log in, and edit the card: photos, captions, letter,
    ```
 3. Vercel serves `site/` as a static website (see `vercel.json`). Every push redeploys it.
 
-`data/` (accounts) and `uploads/` (original files) are not committed. Only the exported card in `site/` is.
+## Continue editing on another computer
+
+Clone the repo and run `PORT=3001 node server.js` (Node 18+, nothing to install). The card is restored from `data/cards.json` and `uploads/`. Sign up or log in and it's yours to edit.
+
+Accounts and logins (`data/db.json`) are never committed.

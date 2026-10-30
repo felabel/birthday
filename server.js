@@ -4,12 +4,14 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { execFile } = require('child_process');
 
 const PORT = process.env.PORT || 3000;
 const PUBLIC = path.join(__dirname, 'public');
 const DATA_DIR = path.join(__dirname, 'data');
 const UPLOADS = path.join(__dirname, 'uploads');
 const DB_FILE = path.join(DATA_DIR, 'db.json');
+const CARDS_FILE = path.join(DATA_DIR, 'cards.json'); // card content only, safe to commit to git
 const MAX_BODY = 12 * 1024 * 1024;
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -20,10 +22,29 @@ let db;
 try { db = JSON.parse(fs.readFileSync(DB_FILE, 'utf8')); }
 catch { db = { users: {}, sessions: {}, cards: {} }; }
 
+function writeAtomic(file, data) {
+  const tmp = file + '.tmp';
+  fs.writeFileSync(tmp, JSON.stringify(data, null, 2));
+  fs.renameSync(tmp, file);
+}
 function save() {
-  const tmp = DB_FILE + '.tmp';
-  fs.writeFileSync(tmp, JSON.stringify(db, null, 2));
-  fs.renameSync(tmp, DB_FILE);
+  writeAtomic(DB_FILE, db);
+  writeAtomic(CARDS_FILE, Object.values(db.cards).filter((c) => c.slug !== 'demo'));
+}
+
+// Bring back cards from cards.json (e.g. on a fresh copy of the repo). Cards whose
+// owner isn't on this computer are claimed by the next person who signs up or logs in.
+try {
+  for (const c of JSON.parse(fs.readFileSync(CARDS_FILE, 'utf8'))) {
+    if (!db.cards[c.slug]) db.cards[c.slug] = c;
+  }
+} catch {}
+function claimOrphanCards(u) {
+  let changed = false;
+  for (const c of Object.values(db.cards)) {
+    if (c.slug !== 'demo' && !db.users[c.ownerId]) { c.ownerId = u.id; changed = true; }
+  }
+  if (changed) save();
 }
 
 const id = (n = 12) => crypto.randomBytes(n).toString('base64url').slice(0, n);
@@ -304,6 +325,21 @@ async function api(req, res, pathname, url) {
     return send(res, 201, { url: `/uploads/${name}` });
   }
 
+  // Photos the browser couldn't read itself (e.g. iPhone HEIC) — converted to JPEG with macOS sips.
+  if (pathname === '/api/upload-image' && req.method === 'POST') {
+    if (!user) return send(res, 401, { error: 'Please log in.' });
+    const type = String(req.headers['content-type'] || '').split(';')[0].trim().toLowerCase();
+    const buf = await readRaw(req, MAX_AUDIO);
+    if (!buf.length) return send(res, 400, { error: 'That file is empty.' });
+    const name = `${id(16)}.jpg`;
+    const tmp = path.join(UPLOADS, `tmp-${id(16)}`);
+    fs.writeFileSync(tmp, buf);
+    const ok = await new Promise((resolve) => execFile('sips', ['-s', 'format', 'jpeg', '-Z', '1600', tmp, '--out', path.join(UPLOADS, name)], (err) => resolve(!err)));
+    fs.rmSync(tmp, { force: true });
+    if (!ok) return send(res, 400, { error: `Couldn't read that photo${type ? ` (${type})` : ''}. Try a JPG or PNG.` });
+    return send(res, 201, { url: `/uploads/${name}` });
+  }
+
   if (pathname === '/api/upload' && req.method === 'POST') {
     if (!user) return send(res, 401, { error: 'Please log in.' });
     const b = await readBody(req);
@@ -328,6 +364,7 @@ function addMessage(res, card, b) {
 }
 
 function startSession(res, u) {
+  claimOrphanCards(u);
   const sid = crypto.randomBytes(32).toString('hex');
   db.sessions[sid] = { userId: u.id, createdAt: now() };
   save();
